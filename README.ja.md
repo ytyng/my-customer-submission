@@ -6,6 +6,7 @@ https://www.ytyng.com/blog/react-next-client-submission-dynamic-ssr/
 
 https://github.com/ytyng/my-customer-submission
 
+デプロイしたサイト: https://my-customer-submission.ytyng.com/
 
 # Next の環境構築
 
@@ -289,6 +290,8 @@ export default async function Home() {
 できました。
 
 ![画像](https://media.ytyng.com/20240616/a78ee37cf3dc4210a33add77c71738cd.png)
+
+デプロイしたサイト: https://my-customer-submission.ytyng.com/
 
 生成されたHTMLソースを見ると、SSRできていることが確認できます。
 

@@ -6,6 +6,8 @@ The results of this project are published on Github:
 
 https://github.com/ytyng/my-customer-submission
 
+Deployed site: https://my-customer-submission.ytyng.com/
+
 # Setting Up the Next.js Environment
 
 ```shell
@@ -280,6 +282,8 @@ Copy the submitted browser JavaScript into `public/js/`.
 It works.
 
 ![Image](https://media.ytyng.com/20240616/a78ee37cf3dc4210a33add77c71738cd.png)
+
+Deployed site: https://my-customer-submission.ytyng.com/
 
 When viewing the generated HTML source, you can confirm that it is server-side rendered (SSR).
 
