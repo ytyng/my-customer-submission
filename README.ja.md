@@ -1,18 +1,19 @@
-https://www.ytyng.com/en/blog/react-next-client-submission-dynamic-ssr/
+https://www.ytyng.com/blog/react-next-client-submission-dynamic-ssr/
 
-This is a tutorial on how to handle the requirement of dynamically changing parts of the client-submitted HTML on the server side using Next.js.
+クライアント入稿されたHTMLに、一部サーバーサイドで動的に変更する要件を、Next で対応するチュートリアルです。
 
-The results of this project are published on Github:
+今回のプロジェクトの結果は Github で公開しています。
 
 https://github.com/ytyng/my-customer-submission
 
-# Setting Up the Next.js Environment
+
+# Next の環境構築
 
 ```shell
 npx create-next-app@latest --typescript
 ```
 
-Make the following selections:
+次のように選択していきます。
 
 - project name: my-customer-submission
 - Would you like to use ESLint: Yes
@@ -21,22 +22,25 @@ Make the following selections:
 - Would you like to use App Router? (recommended): Yes
 - Would you like to customize the default import alias: Yes
 
-![Image](https://media.ytyng.com/20240616/acb6c4354442404587d42fa88204159a.png)
+![画像](https://media.ytyng.com/20240616/acb6c4354442404587d42fa88204159a.png)
 
-## Running the App
+
+
+## 動作確認
 
 ```shell
 cd my-customer-submission
 npm run dev
 ```
 
-![Image](https://media.ytyng.com/20240616/807d1714046743e88fd80552dfbd87ce.png)
+![画像](https://media.ytyng.com/20240616/807d1714046743e88fd80552dfbd87ce.png)
 
-# Adding the Submitted HTML
 
-Create a `src/templates` folder and place the submitted HTML in it.
+# 入稿HTML の追加
 
-Assume that the CSS uses Bootstrap CDN and handwritten CSS.
+`src/templates` フォルダを作って、入稿されたHTMLを入れます。
+
+CSS は Bootstrap CDN と手書きの CSS を使っているものとします。
 
 ## src/templates/index.html
 ```html
@@ -101,31 +105,34 @@ document.querySelector('#register-button').addEventListener('click', function() 
 })
 ```
 
-![Image](https://media.ytyng.com/20240616/e4871bca38944487b36c9c71881e480c.png)
+![画像](https://media.ytyng.com/20240616/e4871bca38944487b36c9c71881e480c.png)
 
-# Strategy
+# 方針
 
-Extract only the contents of the `body` from the submitted HTML file and convert it into a React component. Then, replace the HTML element with `id="main-content"` with another React element.
+入稿 HTML ファイルから、 `body` の中身だけを抜き出して React のコンポーネントにし、`id="main-content"` のHTMLエレメントを別の React エレメントに差し替えます。
 
-Although the submitted HTML file contains `head` tags, we will not use them this time, and instead, create the head contents ourselves.
-While there might be ways to parse and use the contents of the head, we will skip that for now and manually create the `<link>` tags, for example, to load Bootstrap from the CDN.
+入稿 HTML ファイルには `head` タグがありますが、今回はこれは使わずに独自で head の内容を作ります。
+head の内容をパースして使う方法もあると思いますが、今回は行わず、例えば BootStrap を CDN から読み込んでいる箇所は、コピペで `<link>`` タグを作ります。
 
-There is browser JavaScript. The action of pressing the "Register" button on the top right is registered.
-This will be copied as is into the public directory and returned to the client.
+ブラウザJSがあります。右上の「Register」ボタンを押した時のアクションが登録されています。
+これは public 内にそのままコピーしてクライアントに返します。
 
-# Preparing Libraries
 
-## Installing html-react-parser
+# ライブラリの準備
 
-To parse and use HTML, we will use `html-react-parser`.
+## html-react-parser のインストール
+
+HTMLをパースして使うにあたり、`html-react-parser` を使います。
 
 ```shell
 npm install html-react-parser -D
 ```
 
-# Adding Components
 
-Fetch [posts](https://jsonplaceholder.typicode.com/posts) from [JSONPlaceholder](https://jsonplaceholder.typicode.com) and create a React component that displays them using Bootstrap's Card component.
+# コンポーネントの追加
+
+[JSONPlaceholder](https://jsonplaceholder.typicode.com) の [posts](https://jsonplaceholder.typicode.com/posts)
+を取得して、 Bootstrap の Card コンポーネントで表示する React コンポーネントを作ります。
 
 ## src/app/interfaces/posts.ts
 ```ts
@@ -142,7 +149,7 @@ export interface PostData {
 import {PostData} from '@/app/interfaces/posts'
 
 /**
- * Component representing a single post card
+ * ポストのカード1枚を表すコンポーネント
  */
 export default async function Component({postData}: {postData: PostData}) {
   return (
@@ -169,7 +176,7 @@ async function getPosts(): Promise<PostData[]> {
 }
 
 /**
- * Component that fetches and displays multiple post cards
+ * ポストのカード複数枚を fetch してから表示するコンポーネント
  */
 export default async function Component() {
   const posts = await getPosts()
@@ -179,14 +186,15 @@ export default async function Component() {
 }
 ```
 
-# Updating layout.tsx
+# layout.tsx の修正
 
-In `layout.tsx`, return the `html`, `head`, and `body` HTML elements.
-Import the template's CSS here.
+`layout.tsx` で `html`, `head`, `body` の HTML エレメントを返すようにします。
+テンプレートの css はここで import しています。
 
-This time, the link tags, etc., were hardcoded in the tsx instead of parsing them from the submitted HTML.
+今回は、link タグなどは 入稿HTMLからパースせず、tsx にハードコーディングしました。
 
-While it is not ideal to have duplicated management of the `link` tags and the class names in the `body`, what approach is best depends on the frequency of modifications to the submitted HTML and the project's policies.
+`head` 内の `link` タグや `body` のクラス名は、二重管理になってしまっていますのであまり良くありませんが、
+どのような方針が良いかは入稿 HTML の修正頻度やプロジェクトの方針次第になると思います。
 
 ## src/app/layout.tsx
 ```tsx
@@ -218,11 +226,12 @@ export default function RootLayout({
 
 ```
 
-# Updating page.tsx
+# page.tsx の修正
 
-Load the submitted HTML, extract only the contents of the `body` using a regular expression, and parse it with html-react-parser.
+入稿HTML を読み込み、正規表現で `body` の中だけを抽出して html-react-parser でパースします。
 
-Then, replace the `<div id="main-content"></div>` with the `PostCards` component.
+そして、 `<div id="main-content"></div>` を、`PostCards` コンポーネントに差し替えます。
+
 
 ## src/app/page.tsx
 ```
@@ -233,14 +242,14 @@ import parse from 'html-react-parser'
 import PostCards from '@/app/components/PostCards'
 
 /**
- * Get the contents of a file as text
+ * ファイルの内容をテキストとして取得
  */
 async function loadHtmlFile(filePath: string) {
   return fs.promises.readFile(filePath, 'utf8')
 }
 
 /**
- * Extract the contents of the HTML body tag
+ * HTMLのbodyタグの中身を取得
  */
 function extractBodyContent(html: string) : string {
   const match = /<body[^>]*?>([\s\S]*)<\/body>/.exec(html)
@@ -248,7 +257,7 @@ function extractBodyContent(html: string) : string {
 }
 
 /**
- * Replace the <div id="main-content"> within the template with PostCards
+ * テンプレート内の <div id="main-content"> を PostCards に置き換える
  */
 function replaceElement(domNode: any, index: number) {
   if (domNode.type === "tag" && domNode.name === "div" && domNode.attribs.id === "main-content") {
@@ -259,7 +268,7 @@ function replaceElement(domNode: any, index: number) {
 }
 
 /**
- * Get the Body of the template HTML as a JSX.Element
+ * テンプレートHTML の Body を JSX.Element として取得
  */
 async function getInnerBodyElement() {
   const htmlTemplatePath = "src/templates/index.html"
@@ -273,14 +282,14 @@ export default async function Home() {
 }
 ```
 
-# Copying JS Files
-Copy the submitted browser JavaScript into `public/js/`.
+# JSファイルのコピー
+入稿された ブラウザJSは、`public/js/` 内にコピーします。
 
-# Running the App
-It works.
+# 動作確認
+できました。
 
-![Image](https://media.ytyng.com/20240616/a78ee37cf3dc4210a33add77c71738cd.png)
+![画像](https://media.ytyng.com/20240616/a78ee37cf3dc4210a33add77c71738cd.png)
 
-When viewing the generated HTML source, you can confirm that it is server-side rendered (SSR).
+生成されたHTMLソースを見ると、SSRできていることが確認できます。
 
-![Image](https://media.ytyng.com/20240616/a04b31ae489a46829079578a75233371.png)
+![画像](https://media.ytyng.com/20240616/a04b31ae489a46829079578a75233371.png)
