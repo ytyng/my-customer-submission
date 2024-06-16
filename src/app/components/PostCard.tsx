@@ -10,7 +10,7 @@ export default async function Component({postData}: {postData: PostData}) {
         #{postData.id} {postData.title}
       </div>
       <div className={'card-body p-2'}>
-        <div>#{postData.body}</div>
+        <div>{postData.body}</div>
       </div>
     </div>
   )
